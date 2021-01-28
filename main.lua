@@ -53,11 +53,7 @@ end
 
 
 nk.run_once(function(ctx)
-
   local now = os.time()
   nk.logger_info(("Backend loaded at %d"):format(now))
-
   nk.register_matchmaker_matched(makematch)
-
-  create_tournament()
 end)
