@@ -16,31 +16,19 @@
 
 local nk = require("nakama")
 
-local format = string.format
 local function log(fmt, ...)
     nk.logger_info(string.format(fmt, ...))
 end
 
-local function pprint(value)
-    if type(value) == "table" then
-        for k,v in pairs(value) do
-            log("'%s' = '%s'", tostring(k), tostring(v))
-        end
-    else
-        log(tostring(value))
-    end
-end
-
-
+-- callback when two players have been matched
+-- create a match with match logic from tictactoe_match.lua
+-- return match id
 local function makematch(context, matched_users)
     log("Creating TicTacToe match")
     -- print matched users
     for _, user in ipairs(matched_users) do
         local presence = user.presence
         log("Matched user '%s' named '%s'", presence.user_id, presence.username)
-        for k, v in pairs(user.properties) do
-            log("Matched on '%s' value '%s'", k, v)
-        end
     end
 
     local modulename = "tictactoe_match"
@@ -50,10 +38,8 @@ local function makematch(context, matched_users)
 end
 
 
-
-
 nk.run_once(function(ctx)
   local now = os.time()
-  nk.logger_info(("Backend loaded at %d"):format(now))
+  log("Backend loaded at %d", now)
   nk.register_matchmaker_matched(makematch)
 end)
