@@ -1,10 +1,9 @@
 version: '3'
 services:
   cockroachdb:
-    container_name: cockroachdb
-    image: cockroachdb/cockroach:v19.2.5
-    command: start --insecure --store=attrs=ssd,path=/var/lib/cockroach/
-    restart: always
+    image: cockroachdb/cockroach:latest-v20.2
+    command: start-single-node --insecure --store=attrs=ssd,path=/var/lib/cockroach/
+    restart: "no"
     volumes:
       - data:/var/lib/cockroach
     expose:
@@ -15,20 +14,20 @@ services:
       - "8080:8080"
   nakama:
     container_name: nakama
-    image: heroiclabs/nakama:2.12.0
+    image: heroiclabs/nakama:3.1.1
     entrypoint:
       - "/bin/sh"
       - "-ecx"
       - >
           /nakama/nakama migrate up --database.address root@cockroachdb:26257 &&
-          exec /nakama/nakama --name nakama1 --database.address root@cockroachdb:26257
+          exec /nakama/nakama --name nakama1 --database.address root@cockroachdb:26257 --runtime.path /nakama/data/modules
     restart: always
     links:
       - "cockroachdb:db"
     depends_on:
       - cockroachdb
     volumes:
-      - ./:/nakama/data
+      - ./:/nakama/data/modules
     expose:
       - "7349"
       - "7350"
