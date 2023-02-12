@@ -116,6 +116,10 @@ function M.match_loop(context, dispatcher, tick, gamestate, messages)
     return gamestate
 end
 
+function M.match_signal(context, dispatcher, tick, state, data)
+	return state, "signal received: " .. data
+end
+
 function M.match_terminate(context, dispatcher, tick, gamestate, grace_seconds)
     nk.logger_info("match_terminate")
     local message = "Server shutting down in " .. grace_seconds .. " seconds"
